@@ -5,9 +5,9 @@ import Person from './Person/Person'
 class App extends Component {
     state = {
        persons: [
-           {name: 'Megan', age: 29},
-           {name: 'Gabby', age: 22},
-           {name: 'Jacob', age: 46},
+           {name: 'Megan', age: 29, id: 1},
+           {name: 'Gabby', age: 22, id: 2},
+           {name: 'Jacob', age: 46, id: 3},
        ],
        togglePerson: false,
     }
@@ -19,18 +19,16 @@ class App extends Component {
                 {name: 'Jacob', age: 12},
             ] })
     }
-    nameChangedHandler = (event) => {
-        event.preventDefault();
-        this.setState({persons: [
-                {name: 'Megan', age: 29},
-                {name: event.target.value, age: 22},
-                {name: 'Jacob', age: 12},
-            ] })
 
-    }
     togglePerson = (e) => {
         let doesShow = this.state.togglePerson;
         this.setState({togglePerson: !doesShow})
+    }
+
+    deletePersonHandler = (personIndex) => {
+        const persons = [...this.state.persons];
+        persons.splice(personIndex, 1)
+        this.setState({persons: persons})
     }
   render() {
         const style = {
@@ -44,20 +42,16 @@ class App extends Component {
 
         if(this.state.togglePerson) {
             persons = (
-                <div>
-                <Person
-                    name={this.state.persons[0].name}
-                    age={this.state.persons[0].age}
-                    switchPersonsInfo={this.switchPersonsInfo.bind(this, "mega")}
-                />
-                <Person
-                    name={this.state.persons[1].name}
-                    age={this.state.persons[1].age}
-                    nameChangedHandler={this.nameChangedHandler}
 
-                >My Hobbies include: Art</Person>
-                <Person name={this.state.persons[2].name} age={this.state.persons[2].age}/>
-            </div>
+                <div>
+                    {this.state.persons.map((person, index)  => {
+                        return <Person
+                            deletePersonHandler={() => this.deletePersonHandler(index)}
+                            name={person.name}
+                            age={person.age}
+                            key={person.id}/>
+                    })}
+                </div>
             )
 
         }
