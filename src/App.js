@@ -12,15 +12,26 @@ class App extends Component {
        togglePerson: false,
     }
 
-    switchPersonsInfo = (nameUpdate) => {
-        this.setState({persons: [
-                {name: nameUpdate, age: 29},
-                {name: 'Gabby', age: 22},
-                {name: 'Jacob', age: 12},
-            ] })
-    }
+    nameChangedHandler = (event, id) => {
+        const personIndex = this.state.persons.findIndex(person => {
+            return person.id === id;
+        })
+
+        const person = {
+            ...this.state.persons[personIndex]
+        };
+
+        person.name = event.target.value;
+
+        const persons = [...this.state.persons];
+        persons[personIndex] = person;
+
+        this.setState({
+            persons: persons })
+    };
 
     togglePerson = (e) => {
+        e.preventDefault();
         let doesShow = this.state.togglePerson;
         this.setState({togglePerson: !doesShow})
     }
@@ -49,7 +60,8 @@ class App extends Component {
                             deletePersonHandler={() => this.deletePersonHandler(index)}
                             name={person.name}
                             age={person.age}
-                            key={person.id}/>
+                            key={person.id}
+                            nameChangedHandler={(event) =>this.nameChangedHandler(event, person.id)}/>
                     })}
                 </div>
             )
